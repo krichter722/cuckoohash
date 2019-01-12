@@ -1,10 +1,13 @@
 package com.github.mfondo;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
@@ -134,5 +137,26 @@ public class CuckooHashSetTest {
         cuckooSet.clear();
         hashSet.clear();
         assertEquals(cuckooSet, hashSet);
+    }
+
+    @Test
+    public void testScalability() {
+        List<Locale> availableLocales = Arrays.asList(Locale.getAvailableLocales());
+        IntStream.range(0, 17).forEach(i -> {
+            CuckooHashSet<Integer> cuckooHashSet = new CuckooHashSet<>(Integer.class);
+            IntStream.range(0, (int)Math.pow(2, i))
+                    .forEach(numberFormat -> cuckooHashSet.add(numberFormat));
+        });
+    }
+
+    @Test
+    public void testScalabilityParallel() {
+        List<Locale> availableLocales = Arrays.asList(Locale.getAvailableLocales());
+        IntStream.range(0, 10).forEach(i -> {
+            CuckooHashSet<Integer> cuckooHashSet = new CuckooHashSet<>(Integer.class);
+            IntStream.range(0, (int)Math.pow(2, i))
+                    .parallel()
+                    .forEach(numberFormat -> cuckooHashSet.add(numberFormat));
+        });
     }
 }
