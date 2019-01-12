@@ -1,24 +1,22 @@
 package com.github.mfondo;
 
-import com.google.common.base.Preconditions;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: mikefriesen
- * Date: 10/31/14
- * Time: 5:15 PM
+ *
  */
-public class CuckooHashSetTest extends TestCase {
+public class CuckooHashSetTest {
 
     private long cuckooHashAddTime = 0L;
     private long hashAddTime = 0L;
     private long cuckooHashRemoveTime = 0L;
     private long hashRemoveTime = 0L;
 
+    @Test
     public void test1() {
 
         final CuckooHashSet.HashFunction<Integer> intHashFunction = new CuckooHashSet.HashFunction<Integer>() {
@@ -32,7 +30,7 @@ public class CuckooHashSetTest extends TestCase {
             }
         };
 
-        Set<Integer> cuckooSet = new CuckooHashSet<Integer>(Integer.class, 100, 0.9f, new CuckooHashSet.HashFunction<Integer>() {
+        CuckooHashSet<Integer> cuckooSet = new CuckooHashSet<Integer>(Integer.class, 100, 0.9f, new CuckooHashSet.HashFunction<Integer>() {
             @Override
             public int hash(Integer integer) {
                 return integer;
@@ -44,8 +42,8 @@ public class CuckooHashSetTest extends TestCase {
         runTests(cuckooSet);
     }
 
-    private void runTests(Set<Integer> cuckooSet) {
-        final Set<Integer> hashSet = new HashSet<Integer>();
+    private void runTests(CuckooHashSet<Integer> cuckooSet) {
+        final HashSet<Integer> hashSet = new HashSet<Integer>();
 
         assertAdd(cuckooSet, hashSet, 1);
         assertTrue(cuckooSet.contains(1));
@@ -112,8 +110,7 @@ public class CuckooHashSetTest extends TestCase {
         hashRemoveTime = 0;
     }
 
-    private void assertAdd(Set<Integer> cuckooSet, Set<Integer> hashSet, int i) {
-        Preconditions.checkArgument(cuckooSet instanceof CuckooHashSet && hashSet instanceof HashSet);
+    private void assertAdd(CuckooHashSet<Integer> cuckooSet, HashSet<Integer> hashSet, int i) {
         long start = System.nanoTime();
         cuckooSet.add(i);
         cuckooHashAddTime += System.nanoTime() - start;
@@ -123,8 +120,7 @@ public class CuckooHashSetTest extends TestCase {
         assertEquals(cuckooSet, hashSet);
     }
 
-    private void assertRemove(Set<Integer> cuckooSet, Set<Integer> hashSet, int i) {
-        Preconditions.checkArgument(cuckooSet instanceof CuckooHashSet && hashSet instanceof HashSet);
+    private void assertRemove(CuckooHashSet<Integer> cuckooSet, HashSet<Integer> hashSet, int i) {
         long start = System.nanoTime();
         cuckooSet.remove(i);
         cuckooHashRemoveTime += System.nanoTime() - start;
