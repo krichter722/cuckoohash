@@ -18,6 +18,9 @@ public class CuckooHashSet<T> extends AbstractSet<T> {
     private static final int UPPER_BITS_SHIFT = 16;
     private static final int LOWER_BITS_MASK = 0xFFFF;
 
+    public static final int MAX_INSERT_LOOPS_DEFAULT = 100;
+    public static final float LOAD_FACTOR_DEFAULT = 0.9f;
+
     private final Class<T> valueClazz;
     private final HashFunction<T> hashFunction1;
     private final HashFunction<T> hashFunction2;
@@ -26,6 +29,10 @@ public class CuckooHashSet<T> extends AbstractSet<T> {
 
     private T[] values;
     private int size = 0;
+
+    public CuckooHashSet(Class<T> valueClazz) {
+        this(valueClazz, MAX_INSERT_LOOPS_DEFAULT, LOAD_FACTOR_DEFAULT);
+    }
 
     /**
      * Uses {@link Object#hashCode()} as the hash function
